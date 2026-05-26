@@ -7,3 +7,11 @@ for item in lst1:
         lst2.append(item)
 
 print(f"Список стрингових значень: {lst2}")
+
+lst2 = []
+
+for item in lst1:
+    if isinstance(item, str):
+        lst2.append(item)
+
+print(f"Список стрингових значень: {lst2}")
