@@ -3,9 +3,15 @@ from datetime import datetime
 
 logging.basicConfig(
     filename="hb_test.log",
+    filemode="w",
+    level=logging.WARNING,
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+'''logging.basicConfig(
+    filename="hb_test.log",
     level=logging.WARNING,
     format="%(levelname)s - %(message)s"
-)
+)'''
 
 logger = logging.getLogger(__name__)
 
