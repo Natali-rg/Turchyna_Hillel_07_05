@@ -15,3 +15,5 @@ services:
     container_name: homework29_app
     depends_on:
       - postgres
+    volumes:
+      - ./allure-results:/app/allure-results
