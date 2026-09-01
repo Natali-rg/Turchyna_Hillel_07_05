@@ -17,26 +17,36 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh '''
-                    apt-get update && apt-get install -y python3-venv
+                    apt-get update
+                    apt-get install -y python3-venv
+
+                    cd Lessons/homework29
+
                     python3 -m venv venv
-                    . venv/bin/activate
-                    pip install -r requirements.txt
-                    '''
+
+                    venv/bin/python -m pip install --upgrade pip
+                    venv/bin/pip install -r requirements.txt
+                '''
             }
         }
         stage('Run tests') {
             steps {
-                sh 'pytest --junitxml=test-results.xml --alluredir=allure-results'
+                sh '''
+                    venv/bin/python -m pytest \
+                        Lessons/homework29/test_database.py \
+                        --junitxml=Lessons/homework29/test-results.xml \
+                        --alluredir=Lessons/homework29/allure-results
+                '''
             }
         }
         stage('Publish test results') {
             steps {
-             junit 'test-results.xml'
+             junit 'Lessons/homework29/test-results.xml'
              }
         }
         stage('Publish Allure Report') {
             steps {
-                allure([ includeProperties: false, jdk: '', results: [[path: 'allure-results']] ])
+                allure([ includeProperties: false, jdk: '', results: [[path: 'Lessons/homework29/allure-results']] ])
             }
         }
     }
