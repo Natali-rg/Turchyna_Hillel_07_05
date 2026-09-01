@@ -1,19 +1,15 @@
 pipeline {
     agent any
 
-//     parameters {
-//         string(name: 'UI_URL', defaultValue: 'https://qauto.forstudy.space', description: 'Who should I say hello to?')
-//         choice(name: 'MARKS', choices: ['api_test', 'Two', 'Three'], description: 'Pick something')
-//         booleanParam(name: 'IS_BOOL', defaultValue: true, description: 'Some description here ')
-//     }
-
     stages {
+
         stage('Git hub clone rep') {
             steps {
-                // Використання облікових даних для клонування репозиторію
-                git branch: 'main', url: 'https://github.com/Natali-rg/Turchyna_Hillel_07_05.git'
+                git branch: 'main',
+                    url: 'https://github.com/Natali-rg/Turchyna_Hillel_07_05.git'
             }
         }
+
         stage('Install dependencies') {
             steps {
                 sh '''
@@ -29,38 +25,40 @@ pipeline {
                 '''
             }
         }
+
         stage('Run tests') {
             steps {
                 sh '''
-                    venv/bin/python -m pytest \
+                    Lessons/homework29/venv/bin/python -m pytest \
                         Lessons/homework29/test_database.py \
                         --junitxml=Lessons/homework29/test-results.xml \
                         --alluredir=Lessons/homework29/allure-results
                 '''
             }
         }
+
         stage('Publish test results') {
             steps {
-             junit 'Lessons/homework29/test-results.xml'
-             }
+                junit 'Lessons/homework29/test-results.xml'
+            }
         }
+
         stage('Publish Allure Report') {
             steps {
-                allure([ includeProperties: false, jdk: '', results: [[path: 'Lessons/homework29/allure-results']] ])
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    results: [[path: 'Lessons/homework29/allure-results']]
+                ])
             }
         }
     }
 
     post {
-        always {
-            mail(
-                to: 'turchyna.natali82@gmail.com',
-                subject: "Jenkins: ${currentBuild.fullDisplayName}",
-                body: "Pipeline finished with status: ${currentBuild.currentResult}" )
-            }
         success {
             echo 'All tests passed!'
         }
+
         failure {
             echo 'Some tests failed!'
         }
