@@ -22,13 +22,18 @@ pipeline {
         }
         stage('Run tests') {
             steps {
-                bat 'pytest --junitxml=test-results.xml'
+                bat 'pytest --junitxml=test-results.xml --alluredir=allure-results'
             }
         }
         stage('Publish test results') {
             steps {
              junit 'test-results.xml'
              }
+        }
+        stage('Publish Allure Report') {
+            steps {
+                allure([ includeProperties: false, jdk: '', results: [[path: 'allure-results']] ])
+            }
         }
     }
 
