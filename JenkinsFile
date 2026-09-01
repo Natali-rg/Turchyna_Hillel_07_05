@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+//     parameters {
+//         string(name: 'UI_URL', defaultValue: 'https://qauto.forstudy.space', description: 'Who should I say hello to?')
+//         choice(name: 'MARKS', choices: ['api_test', 'Two', 'Three'], description: 'Pick something')
+//         booleanParam(name: 'IS_BOOL', defaultValue: true, description: 'Some description here ')
+//     }
+
+    stages {
+        stage('Git hub clone rep') {
+            steps {
+                // Використання облікових даних для клонування репозиторію
+                git branch: 'main', url: 'https://github.com/Natali-rg/Turchyna_Hillel_07_05.git'
+            }
+        }
+        stage('Install dependencies') {
+            steps {
+                bat 'python -m pip install --upgrade pip'
+                bat 'pip install -r requirements.txt'
+            }
+        }
+        stage('Run tests') {
+            steps {
+                bat 'pytest --junitxml=test-results.xml'
+            }
+        }
+        stage('Publish test results') {
+            steps {
+             junit 'test-results.xml'
+             }
+        }
+    }
+
+    post {
+        always {
+            mail(
+                to: 'turchyna.natali82@gmail.com',
+                subject: "Jenkins: ${currentBuild.fullDisplayName}",
+                body: "Pipeline finished with status: ${currentBuild.currentResult}" )
+            }
+        success {
+            echo 'All tests passed!'
+        }
+        failure {
+            echo 'Some tests failed!'
+        }
+    }
+}
