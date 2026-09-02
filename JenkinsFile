@@ -35,7 +35,9 @@ pipeline {
                 sh '''
                     cd Lessons/homework29
 
-                    docker compose run --rm app
+                    docker compose run --rm app pytest \
+                        --junitxml=test-results.xml \
+                        --alluredir=allure-results
                 '''
             }
         }

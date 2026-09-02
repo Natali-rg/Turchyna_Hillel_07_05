@@ -18,3 +18,4 @@ services:
       DATABASE_URL: postgresql://postgres:1234@postgres:5432/homework29
     volumes:
       - ./allure-results:/app/allure-results
+      - ./test-results.xml:/app/test-results.xml
