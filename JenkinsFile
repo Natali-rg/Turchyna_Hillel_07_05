@@ -10,18 +10,13 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
+        stage('Run Docker Compose') {
             steps {
                 sh '''
-                    apt-get update
-                    apt-get install -y python3-venv
-
                     cd Lessons/homework29
 
-                    python3 -m venv venv
-
-                    venv/bin/python -m pip install --upgrade pip
-                    venv/bin/pip install -r requirements.txt
+                    docker compose down --remove-orphans || true
+                    docker compose up -d --build
                 '''
             }
         }
@@ -29,10 +24,9 @@ pipeline {
         stage('Run tests') {
             steps {
                 sh '''
-                    Lessons/homework29/venv/bin/python -m pytest \
-                        Lessons/homework29/test_database.py \
-                        --junitxml=Lessons/homework29/test-results.xml \
-                        --alluredir=Lessons/homework29/allure-results
+                    cd Lessons/homework29
+
+                    docker compose run --rm app
                 '''
             }
         }
@@ -55,6 +49,13 @@ pipeline {
     }
 
     post {
+        always {
+            sh '''
+                cd Lessons/homework29
+                docker compose down --remove-orphans || true
+            '''
+        }
+
         success {
             echo 'All tests passed!'
         }
