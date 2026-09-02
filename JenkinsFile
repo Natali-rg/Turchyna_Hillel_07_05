@@ -9,6 +9,15 @@ pipeline {
                     url: 'https://github.com/Natali-rg/Turchyna_Hillel_07_05.git'
             }
         }
+        stage('Check Docker') {
+            steps {
+                sh '''
+                    docker --version
+                    docker compose version
+                    docker info
+                '''
+            }
+        }
 
         stage('Run Docker Compose') {
             steps {
