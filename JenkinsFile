@@ -38,13 +38,16 @@ pipeline {
                     rm -rf allure-results/*
                     rm -rf test-results/*
                     mkdir -p test-results
+                    mkdir -p allure-results
 
                     docker compose run --name homework29_test app pytest \
                         --junitxml=/app/test-results/test-results.xml \
                         --alluredir=/app/allure-results
 
+                    echo "=== Copy JUnit results ==="
                     docker cp homework29_test:/app/test-results/test-results.xml ./test-results/test-results.xml
 
+                    echo "=== Remove test container ==="
                     docker rm homework29_test
 
                     echo "=== JUnit results ==="
