@@ -46,6 +46,12 @@ pipeline {
                     docker cp homework29_test:/app/test-results/test-results.xml ./test-results/test-results.xml
 
                     docker rm homework29_test
+
+                    echo "=== JUnit results ==="
+                    ls -la test-results
+
+                    echo "=== Allure results ==="
+                    ls -la allure-results
                 '''
             }
         }
