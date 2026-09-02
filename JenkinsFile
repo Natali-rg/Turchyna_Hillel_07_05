@@ -35,16 +35,19 @@ pipeline {
                 sh '''
                     cd Lessons/homework29
 
+                    rm -rf allure-results/*
+                    rm -rf test-results/*
+
                     docker compose run --rm app pytest \
-                        --junitxml=test-results.xml \
-                        --alluredir=allure-results
+                        --junitxml=/app/test-results/test-results.xml \
+                        --alluredir=/app/allure-results
                 '''
             }
         }
 
         stage('Publish test results') {
             steps {
-                junit 'Lessons/homework29/test-results.xml'
+                junit 'Lessons/homework29/test-results/test-results.xml'
             }
         }
 
