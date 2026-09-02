@@ -39,7 +39,7 @@ pipeline {
                     rm -rf test-results/*
                     mkdir -p test-results
 
-                    docker compose run --rm app pytest \
+                    docker compose run --name homework29_test app pytest \
                         --junitxml=/app/test-results/test-results.xml \
                         --alluredir=/app/allure-results
 
