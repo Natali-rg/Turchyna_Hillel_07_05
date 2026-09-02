@@ -37,16 +37,25 @@ pipeline {
 
                     rm -rf allure-results/*
                     rm -rf test-results/*
+                    mkdir -p test-results
 
                     docker compose run --rm app pytest \
                         --junitxml=/app/test-results/test-results.xml \
                         --alluredir=/app/allure-results
+
+                    docker cp homework29_test:/app/test-results/test-results.xml ./test-results/test-results.xml
+
+                    docker rm homework29_test
                 '''
             }
         }
 
         stage('Publish test results') {
             steps {
+                sh '''
+                    ls -la Lessons/homework29/test-results
+                '''
+
                 junit 'Lessons/homework29/test-results/test-results.xml'
             }
         }
