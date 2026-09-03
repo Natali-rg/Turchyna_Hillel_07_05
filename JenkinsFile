@@ -41,20 +41,9 @@ pipeline {
                     mkdir -p test-results
 
 
-                    docker compose run --name homework29_test app pytest \
+                    docker compose run --rm --name homework29_test app pytest \
                         --junitxml=/app/test-results/test-results.xml \
                         --alluredir=/app/allure-results
-
-                    echo "=== Allure results INSIDE container ==="
-                    docker exec homework29_test ls -la /app/allure-results
-
-                    echo "=== Copy JUnit results ==="
-                    docker cp homework29_test:/app/test-results/test-results.xml ./test-results/test-results.xml
-
-                    echo "=== Copy Allure results ==="
-                    docker cp homework29_test:/app/allure-results/. ./allure-results/
-
-
 
                     echo "=== Results in Jenkins workspace ==="
                     echo "JUnit:"
@@ -63,8 +52,6 @@ pipeline {
                     echo "Allure:"
                     ls -la allure-results
 
-                    echo "=== Remove test container ==="
-                    docker rm homework29_test
                 '''
             }
         }
